@@ -20,7 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ChessQL_BASE_javafx" target="1.5" />
+      <module name="ChessQL_BASE_javafx" target="1.9" />
     </bytecodeTargetLevel>
   </component>
 </project>

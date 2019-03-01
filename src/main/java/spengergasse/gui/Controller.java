@@ -1,4 +1,4 @@
-package main.base.gui;
+package spengergasse.gui;
 
 public class Controller {
 }
