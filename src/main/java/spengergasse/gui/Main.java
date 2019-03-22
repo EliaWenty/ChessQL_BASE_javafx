@@ -25,7 +25,7 @@ public class Main extends Application {
         //FXMLLoader loader = FXMLLoader.load(getClass().getClassLoader().getResource("sample1.fxml"));
         //FXMLLoader loader = new FXMLLoader(getClass().getResource("sample1.fxml"));
         //AnchorPane root = (AnchorPane)loader.getNamespace().get("AnchorPane");
-        //Parent root = loader.load();
+        //Parent root = loader.load();hvhgvgv
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("sample1.fxml"));
 
 
