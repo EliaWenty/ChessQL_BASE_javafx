@@ -1,4 +1,4 @@
-package spengergasse.gui;
+package at.chessql.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

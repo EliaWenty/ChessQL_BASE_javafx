@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 
-<GridPane fx:id="main-window" alignment="CENTER" hgap="10.0" prefHeight="247.00009999999747" prefWidth="241.9998779296875" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="spengergasse.gui.Controller">
+<GridPane fx:id="main-window" alignment="CENTER" hgap="10.0" prefHeight="247.00009999999747" prefWidth="241.9998779296875" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.chessql.gui.Controller">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
   </columnConstraints>
