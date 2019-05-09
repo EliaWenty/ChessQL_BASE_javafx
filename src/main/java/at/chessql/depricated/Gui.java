@@ -4,21 +4,23 @@ import at.chessql.logik.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class Gui extends Application {
     TextField eingabe = new TextField();
     GridPane window = new GridPane();
     GridPane controllP = new GridPane();
-    GridPane root = new GridPane();
+    GridPane gridPane = new GridPane();
     int zugCounter = 0;
     HashMap<String,String> oldfield = new HashMap<>();
     List<String> totS = new ArrayList<>();
@@ -56,7 +58,7 @@ public class Gui extends Application {
     String POS="";
     String ip="jdbc:mysql://localhost/chessql";
     String psw="";
-    String user="root";
+    String user="gridPane";
     Label amZug = new Label("♔ WEIß ♔");
     Button zugBestätigen = new Button("Confirm");
     Button setCon = new Button("set Connection");
@@ -78,7 +80,8 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //GridPane root = new GridPane();
+
+        //GridPane gridPane = new GridPane();
         createBtn();
         ausgewählt.setFont(new Font("Arial",20));
         möglich.setFont(Font.font("Arial",20));
@@ -93,7 +96,7 @@ public class Gui extends Application {
         logfeld.add(log2,0,2);
         logfeld.add(log1,0,3);
 
-        //root.setGridLinesVisible(true);
+        //gridPane.setGridLinesVisible(true);
 
         zugBestätigen.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -363,8 +366,8 @@ public class Gui extends Application {
         });
 
         for (int i = 0; i < size ; i++) {
-            root.getColumnConstraints().add(new ColumnConstraints(90));
-            root.getRowConstraints().add(new RowConstraints(90));
+            gridPane.getColumnConstraints().add(new ColumnConstraints(90));
+            gridPane.getRowConstraints().add(new RowConstraints(90));
         }
 
         Label eins = new Label(" 1");
@@ -403,23 +406,23 @@ public class Gui extends Application {
         g.setFont(Font.font("Arial",20));
         h.setFont(Font.font("Arial",20));
 
-        root.add(eins, 9, 0);
-        root.add(zwei, 9, 1);
-        root.add(drei, 9, 2);
-        root.add(vier, 9, 3);
-        root.add(fünf, 9, 4);
-        root.add(sechs, 9, 5);
-        root.add(sieben, 9, 6);
-        root.add(acht, 9, 7);
+        gridPane.add(eins, 9, 0);
+        gridPane.add(zwei, 9, 1);
+        gridPane.add(drei, 9, 2);
+        gridPane.add(vier, 9, 3);
+        gridPane.add(fünf, 9, 4);
+        gridPane.add(sechs, 9, 5);
+        gridPane.add(sieben, 9, 6);
+        gridPane.add(acht, 9, 7);
 
-        root.add(a, 0, 9);
-        root.add(b, 1, 9);
-        root.add(c, 2, 9);
-        root.add(d, 3, 9);
-        root.add(e, 4, 9);
-        root.add(f, 5, 9);
-        root.add(g, 6, 9);
-        root.add(h, 7, 9);
+        gridPane.add(a, 0, 9);
+        gridPane.add(b, 1, 9);
+        gridPane.add(c, 2, 9);
+        gridPane.add(d, 3, 9);
+        gridPane.add(e, 4, 9);
+        gridPane.add(f, 5, 9);
+        gridPane.add(g, 6, 9);
+        gridPane.add(h, 7, 9);
 
 
         Label ip = new Label("Ip:");
@@ -527,7 +530,7 @@ public class Gui extends Application {
         // window.add(spielanleitung,11,4);
 
         //window.setGridLinesVisible(true);
-        window.add(root, 0, 2, 9,16);
+        window.add(gridPane, 0, 2, 9,16);
         window.add(controllP, 11,2,3,8);
 
         for (int i = 0; i < windowsize; i++) {
@@ -697,8 +700,8 @@ public class Gui extends Application {
                 }
 
                 square.setStyle("-fx-background-color: "+color+";");
-                root.add(square, col, row);
-                root.add(btn, col, row);
+                gridPane.add(square, col, row);
+                gridPane.add(btn, col, row);
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
