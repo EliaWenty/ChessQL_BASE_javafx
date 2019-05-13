@@ -4,11 +4,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class Spiellogik {
     private Connection connection;
     int zugCounter;
-    public Spiellogik(String ip, String user, String psw, int z) throws Exception{
+    Integer callback1 = 0;
+    public Spiellogik(String ip, String user, String psw, int z)throws Exception{
         try
         {
             Class.forName("com.mysql.jdbc.Driver");
@@ -96,6 +99,15 @@ public class Spiellogik {
         String createTablea = "create table if not exists a_anleitung(a_id char(1) primary key,a_beschreibung varchar(10000))";
         pstmt = connection.prepareStatement(createTablea);
         pstmt.executeUpdate();
+        String dropTablep = "drop table if exists p_players";
+        pstmt = connection.prepareStatement(dropTablep);
+        pstmt.executeUpdate();
+        String createTablep= "create table p_players(p_id int(8) primary key,t_weiss int(1),t_schwarz int(1))";
+        pstmt = connection.prepareStatement(createTablep);
+        pstmt.executeUpdate();
+        String insertp ="insert into p_players(p_id,t_weiss,t_schwarz) values(1,0,0), (2,0,0)";
+        pstmt = connection.prepareStatement(insertp);
+        pstmt.executeUpdate();
         if(zugCounter==0){
             List<String> existA = new ArrayList<>();
             String checka = "select * from a_anleitung";
@@ -151,5 +163,149 @@ public class Spiellogik {
             anleitungen.put(rs.getString("a_id"),rs.getString("a_beschreibung"));
         }
         return anleitungen;
+    }
+
+    public int checkPlayers() throws Exception{ //return 0 sollte nie eintreten
+        String stmt = "Select * from p_players where p_id=1";
+        PreparedStatement pstmt = connection.prepareStatement(stmt);
+        ResultSet rs = pstmt.executeQuery();
+        while(rs.next()) {
+            if(rs.getInt("t_weiss")==0){
+                stmt ="update p_players set t_weiss = 1 where p_id = 1";
+                pstmt = connection.prepareStatement(stmt);
+                pstmt.executeUpdate();
+                return 1;
+            }
+            else if(rs.getInt("t_weiss")==1){
+                if(rs.getInt("t_schwarz")==0){
+                    stmt ="update p_players set t_schwarz = 1 where p_id = 1";
+                    pstmt = connection.prepareStatement(stmt);
+                    pstmt.executeUpdate();
+                    return 2;
+                }
+                else if(rs.getInt("t_schwarz")==1){
+                    return 3;
+                }
+                else {
+                    return 0;
+                }
+            }
+            else{
+                return 0;
+            }
+        }
+        return 0;
+    }
+    public TimerTask createTimertask(int c){
+        if(c==1){
+            TimerTask tt1 = new TimerTask() {
+                @Override
+                public void run() {
+                    try{
+                        String stmt = "Select * from p_players where p_id=1";
+                        PreparedStatement pstmt = connection.prepareStatement(stmt);
+                        ResultSet rs = pstmt.executeQuery();
+                        while(rs.next()) {
+                            if(rs.getInt("t_weiss")==1&&rs.getInt("t_schwarz")==1){
+                                callback1=1;
+                            }
+                        }
+                    }
+                    catch (java.sql.SQLException e){
+                        System.out.println("Fehler bei tt1");
+                    }
+                }
+            };
+            return tt1;
+        }
+        else if(c==2){
+            TimerTask tt2 = new TimerTask() {
+                @Override
+                public void run() {
+                    try{
+                        String stmt = "Select * from p_players where p_id=2";
+                        PreparedStatement pstmt = connection.prepareStatement(stmt);
+                        ResultSet rs = pstmt.executeQuery();
+                        callback1=0;
+                        while(rs.next()) {
+                            if(rs.getInt("t_weiss")==0&&rs.getInt("t_schwarz")==1){
+                                callback1=2;
+                            }
+                            else if(rs.getInt("t_weiss")==1&&rs.getInt("t_schwarz")==0){
+                                callback1=3;
+                            }
+                        }
+                    }
+                    catch (java.sql.SQLException e){
+                        System.out.println("Fehler bei tt2");
+                    }
+                }
+            };
+            return tt2;
+        }
+        return null;
+    }
+    public void setWhite(){
+        try {
+            String stmt = "update p_players set t_weiss = 1, t_schwarz=0 where p_id = 2";
+            PreparedStatement pstmt = connection.prepareStatement(stmt);
+            pstmt.executeUpdate();
+        }
+        catch(java.sql.SQLException e){
+            System.out.println("Fehler bei setWhite "+e);
+        }
+    }
+    public void setBlack(){
+        try {
+            String stmt = "update p_players set t_weiss = 0, t_schwarz=1 where p_id = 1";
+            PreparedStatement pstmt = connection.prepareStatement(stmt);
+            pstmt.executeUpdate();
+        }
+        catch(java.sql.SQLException e){
+            System.out.println("Fehler bei setBlack "+e);
+        }
+
+    }
+    public boolean checkTurn(char farbe){
+        try {
+            String stmt = "Select * from p_players where p_id=2";
+            PreparedStatement pstmt = connection.prepareStatement(stmt);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()){
+                if(farbe=='w'){
+                    if(rs.getInt("t_weiss")==1&&rs.getInt("t_schwarz")==0)
+                        return true;
+                    else if(rs.getInt("t_weiss")==0&&rs.getInt("t_schwarz")==1)
+                        return false;
+                    else{
+                        System.out.println("Ungültige Turn bei checkTurn weiss");
+                        return false;
+                    }
+                }
+                else if(farbe=='s'){
+                    if(rs.getInt("t_weiss")==1&&rs.getInt("t_schwarz")==0)
+                        return false;
+                    else if(rs.getInt("t_weiss")==0&&rs.getInt("t_schwarz")==1)
+                        return true;
+                    else{
+                        System.out.println("Ungültige Turn bei checkTurn schwarz");
+                        return false;
+                    }
+                }
+                else{
+                    System.out.println("Ungültige Farbe bei checkTurn");
+                    return false;
+                }
+            }
+        }
+        catch(java.lang.Exception e){
+            System.out.println("Fehler bei checkTurn " +e);
+        }
+        System.out.println("Falsche case bei checkTurn");
+        return false;
+    }
+
+    public Integer getCallback() {
+        return callback1;
     }
 }

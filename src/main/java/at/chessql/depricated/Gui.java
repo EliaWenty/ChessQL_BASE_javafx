@@ -58,7 +58,7 @@ public class Gui extends Application {
     String POS="";
     String ip="jdbc:mysql://localhost/chessql";
     String psw="";
-    String user="gridPane";
+    String user="root";
     Label amZug = new Label("♔ WEIß ♔");
     Button zugBestätigen = new Button("Confirm");
     Button setCon = new Button("set Connection");
