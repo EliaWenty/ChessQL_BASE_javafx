@@ -57,7 +57,10 @@ public class eliasgui extends Application {
     String user="root";
 
     Label amZug = new Label("♔ WEIß ♔");
-
+    Button dame_1 = new Button();
+    Button laufer_1 = new Button();
+    Button springer_1 = new Button();
+    Button turm_1= new Button();
     Button zugBestätigen = new Button("Confirm");
     Button setCon = new Button("set Connection");
     Button createDb= new Button("create scheme");
@@ -120,6 +123,7 @@ public class eliasgui extends Application {
 
                     if(zugBestätigen.getText()=="Umwandlung"){
                         System.out.println("Bauer hat gegenüberliegende Seite erreicht!");
+
                         if(farbe=='s'){
                             if(möglich.getText().contains(eingabe.getText())) {
                                 sl.umwandeln(zielfeld, eingabe.getText());
@@ -131,6 +135,10 @@ public class eliasgui extends Application {
                                 ausgewählt.setText("");
                                 figuraus.setText("");
                                 anleitung.setText("");
+                                window.getChildren().remove(dame_1);
+                                window.getChildren().remove(turm_1);
+                                window.getChildren().remove(springer_1);
+                                window.getChildren().remove(laufer_1);
 
                                 if(multiplayer){
                                     sl.setWhite();
@@ -159,6 +167,10 @@ public class eliasgui extends Application {
                                 ausgewählt.setText("");
                                 figuraus.setText("");
                                 anleitung.setText("");
+                                window.getChildren().remove(dame_1);
+                                window.getChildren().remove(turm_1);
+                                window.getChildren().remove(springer_1);
+                                window.getChildren().remove(laufer_1);
 
                                 if(multiplayer){
                                     sl.setBlack();
@@ -241,7 +253,7 @@ public class eliasgui extends Application {
                         sl1.setWhite();
                     }
                     TimerTask tt2 = sl1.createTimertask(2);
-                    t.schedule(tt2,3000,3000);
+                    t.schedule(tt2,0,1000);
                     TimerTask tt3 = new TimerTask() {
                         @Override
                         public void run() {
@@ -250,6 +262,7 @@ public class eliasgui extends Application {
                                 if(!sl1.getCallback().equals(oldturn)){
                                     try {
                                         field = sl1.readField(sl1.readField(field));
+                                        System.out.println("in try schwarz");
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -268,6 +281,7 @@ public class eliasgui extends Application {
                                 if(!sl1.getCallback().equals(oldturn)){
                                     try {
                                         field = sl1.readField(sl1.readField(field));
+                                        System.out.println("in try weiss");
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -284,7 +298,7 @@ public class eliasgui extends Application {
                             }
                         }
                     };
-                    t.schedule(tt3,3000,3000);
+                    t.schedule(tt3,0,1000);
                 }
                 catch (java.lang.Exception e){
                     System.out.println("Fehler beim Initialisieren der Spiellogik " +e);
@@ -511,6 +525,9 @@ public class eliasgui extends Application {
         figurfeld.setFont(Font.font("Arial",20));
         z1.setFont(Font.font("Arial",20));
         z2.setFont(Font.font("Arial",20));
+        ipEingabe.setText("jdbc:mysql://192.189.51.135:3306/alfons_chessql");
+        userEingabe.setText("db-admin2");
+        pswEingabe.setText("TBs2017");
 
 /*
         window.add(figurfeld, 8,3);
@@ -591,8 +608,71 @@ public class eliasgui extends Application {
         tsLabel.setFont(Font.font("Arial",20));
 
 
+
+
+        dame_1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(farbe=='s'){
+                    eingabe.setText("dsu");
+                    zugBestätigen.fire();
+                }
+                else{
+                    eingabe.setText("dwu");
+                    zugBestätigen.fire();
+                }
+
+                }
+            });
+        turm_1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(farbe=='s'){
+                    eingabe.setText("tsu");
+                    zugBestätigen.fire();
+                }
+                else{
+                    eingabe.setText("twu");
+                    zugBestätigen.fire();
+                }
+
+            }
+        });
+        springer_1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(farbe=='s'){
+                    eingabe.setText("ssu");
+                    zugBestätigen.fire();
+                }
+                else{
+                    eingabe.setText("swu");
+                    zugBestätigen.fire();
+                }
+
+            }
+        });
+        laufer_1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(farbe=='s'){
+                    eingabe.setText("lsu");
+                    zugBestätigen.fire();
+                }
+                else{
+                    eingabe.setText("lwu");
+                    zugBestätigen.fire();
+                }
+
+            }
+        });
+
         window.add(amZug, 5,4,2,1);
         window.add(restart, 5,3);
+
+        //window.add(zugBestätigen,6,3);
+        //window.add(eingabe,4,3);
+
         window.add(anleitunglabel, 3,0);
         anleitung.setFont(Font.font("Arial",18));
         window.add(anleitung, 3,1, 6,2);
@@ -1058,12 +1138,25 @@ public class eliasgui extends Application {
                             möglich.setText(umwandlungsfig);
                             zugBestätigen.setText("Umwandlung");
                             z1.setText("mögliche Figuren");
+                            window.add(dame_1,6,3);
+                            window.add(turm_1,7,3);
+                            window.add(laufer_1,8,3);
+                            window.add(springer_1,9,3);
+                            dame_1.setText("♛");
+                            turm_1.setText("♜");
+                            laufer_1.setText("♝");
+                            springer_1.setText("♞");
+
                         }
 
-                        else{
-
-                            farbe='w';
-                            amZug.setText("♔ WEIß ♔");
+                        else {
+                            if(!multiplayer) {
+                                farbe = 'w';
+                                amZug.setText("♔ WEIß ♔");
+                            }
+                            else{
+                                sl.setWhite();
+                            }
                         }
                     }
 
@@ -1110,7 +1203,14 @@ public class eliasgui extends Application {
                             möglich.setText(umwandlungsfig);
                             zugBestätigen.setText("Umwandlung");
                             z1.setText("mögliche Figuren");
-
+                            window.add(dame_1,6,3);
+                            window.add(turm_1,7,3);
+                            window.add(laufer_1,8,3);
+                            window.add(springer_1,9,3);
+                            dame_1.setText("♕");
+                            turm_1.setText("♖");
+                            laufer_1.setText("♗");
+                            springer_1.setText("♘");
                         }
                         else {
                             if(!multiplayer) {

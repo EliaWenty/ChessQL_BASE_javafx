@@ -257,7 +257,7 @@ public class Spiellogik {
     }
     public void setBlack(){
         try {
-            String stmt = "update p_players set t_weiss = 0, t_schwarz=1 where p_id = 1";
+            String stmt = "update p_players set t_weiss = 0, t_schwarz=1 where p_id = 2";
             PreparedStatement pstmt = connection.prepareStatement(stmt);
             pstmt.executeUpdate();
         }
